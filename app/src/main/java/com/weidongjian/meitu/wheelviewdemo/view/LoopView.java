@@ -141,12 +141,31 @@ public class LoopView extends View {
         }
     }
 
-    private void remeasure() {
+    private void remeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (items == null) {
             return;
         }
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
         measureTextWidthHeight();
+
+        switch(widthMode){
+            case MeasureSpec.AT_MOST:
+                measuredWidth = maxTextWidth + paddingLeft + paddingRight;
+                break;
+            case MeasureSpec.EXACTLY:
+                measuredWidth = widthSize;
+                if(paddingLeft == 0 || paddingRight == 0) {
+                    paddingLeft = (measuredWidth - maxTextWidth) / 2;
+                    paddingRight = paddingLeft;
+                }
+                break;
+            case MeasureSpec.UNSPECIFIED:
+                measuredWidth = maxTextWidth + paddingLeft + paddingRight;
+            break;
+        }
 
         halfCircumference = (int) (maxTextHeight * lineSpacingMultiplier * (itemsVisible - 1));
         measuredHeight = (int) ((halfCircumference * 2) / Math.PI);
@@ -155,7 +174,7 @@ public class LoopView extends View {
         if (paddingRight<=extraRightWidth) {
             paddingRight = extraRightWidth;
         }
-        measuredWidth = maxTextWidth + paddingLeft + paddingRight;
+
         firstLineY = (int) ((measuredHeight - lineSpacingMultiplier * maxTextHeight) / 2.0F);
         secondLineY = (int) ((measuredHeight + lineSpacingMultiplier * maxTextHeight) / 2.0F);
         if (initPosition == -1) {
@@ -228,6 +247,10 @@ public class LoopView extends View {
         }
     }
 
+    public void setItemsVisible(int itemsVisible) {
+        this.itemsVisible = itemsVisible;
+    }
+
     public final void setNotLoop() {
         isLoop = false;
     }
@@ -242,6 +265,7 @@ public class LoopView extends View {
 
     public final void setInitPosition(int initPosition) {
         this.initPosition = initPosition;
+        totalScrollY = 0;
     }
 
     public final void setListener(OnItemSelectedListener OnItemSelectedListener) {
@@ -250,7 +274,7 @@ public class LoopView extends View {
 
     public final void setItems(List<String> items) {
         this.items = items;
-        remeasure();
+//        remeasure();
         invalidate();
     }
 
@@ -392,7 +416,7 @@ public class LoopView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        remeasure();
+        remeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
