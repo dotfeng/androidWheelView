@@ -124,6 +124,7 @@ public class LoopView extends View {
         paintOuterText.setAntiAlias(true);
         paintOuterText.setTypeface(Typeface.MONOSPACE);
         paintOuterText.setTextSize(textSize);
+        paintOuterText.setTextAlign(Paint.Align.CENTER);
 
         paintCenterText = new Paint();
         paintCenterText.setColor(colorBlack);
@@ -131,6 +132,7 @@ public class LoopView extends View {
         paintCenterText.setTextScaleX(1.05F);
         paintCenterText.setTypeface(Typeface.MONOSPACE);
         paintCenterText.setTextSize(textSize);
+        paintCenterText.setTextAlign(Paint.Align.CENTER);
 
         paintIndicator = new Paint();
         paintIndicator.setColor(colorLightGray);
